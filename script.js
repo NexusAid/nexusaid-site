@@ -1,9 +1,38 @@
-// script.js
-
 document.addEventListener("DOMContentLoaded", () => {
+  // Cookie Consent Banner
+  const banner = document.getElementById("cookie-banner");
+  const acceptBtn = document.getElementById("accept-cookies");
+
+  if (!localStorage.getItem("cookiesAccepted")) {
+    banner.style.display = "flex";
+  } else {
+    loadAnalytics(); // Load if previously accepted
+  }
+
+  acceptBtn.addEventListener("click", () => {
+    localStorage.setItem("cookiesAccepted", "true");
+    banner.style.display = "none";
+    loadAnalytics();
+  });
+
+  function loadAnalytics() {
+    const script = document.createElement("script");
+    script.src = "https://www.googletagmanager.com/gtag/js?id=G-N4Q42BPE0G";
+    script.async = true;
+    document.head.appendChild(script);
+
+    script.onload = () => {
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-N4Q42BPE0G"); // Replace with your GA ID
+    };
+  }
+
   // Smooth scroll for anchor links
   const links = document.querySelectorAll("a[href^='#']");
-
   for (const link of links) {
     link.addEventListener("click", function (e) {
       e.preventDefault();
@@ -14,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Basic client-side contact form validation
+  // Contact form validation
   const form = document.querySelector(".contact-form");
   if (form) {
     form.addEventListener("submit", (e) => {
